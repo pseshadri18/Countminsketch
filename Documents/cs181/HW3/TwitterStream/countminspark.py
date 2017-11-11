@@ -32,16 +32,15 @@ def add_sketches(s1, s2):
     accumulator.merge(s1)
     accumulator.merge(s2)
     return accumulator
+    
+def accumulate_rdd(rdd):
+    sketches = rdd.collect()
+    print "accumulating %d sketches from RDD" % len(sketches)
+    for sketch in sketches:
+        totals.merge(sketch)
 
 def main():
     totals = make_sketch()
-
-    def accumulate_rdd(rdd):
-        sketches = rdd.collect()
-        print "accumulating %d sketches from RDD" % len(sketches)
-        for sketch in sketches:
-            totals.merge(sketch)
-
     sc = pyspark.SparkContext(master="local[%i]" % W)
     ssc = pyspark.streaming.StreamingContext(sc, 10)
 
